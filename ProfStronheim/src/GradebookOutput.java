@@ -23,7 +23,7 @@ import java.util.Properties;
 @WebServlet("/GradebookOutput")
 public class GradebookOutput extends HttpServlet {
 	static Connection conn;
-	static String assignment, grade, output="", custID="", aveT="";
+	static String assignment, assignment2,grade, output="", custID="", aveT="";
 	static int grade2, count=0;
 	static double average, average2;
 	
@@ -47,14 +47,26 @@ public class GradebookOutput extends HttpServlet {
     }
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String ID, assignmentName, type, day, tempStr;
+		String ID, ID2, ID3,assignmentName, type, type2,type3, day, tempStr;
     	String grade = "";
     	
     	ID= request.getParameter("A");
     	System.out.println(ID);
    
     	type=request.getParameter("B");
+    	System.out.println(type);
     	
+    	ID2= request.getParameter("C");
+    	System.out.println(ID2);
+    	
+    	type2=request.getParameter("C2");
+    	System.out.println(type2);
+    	
+    	ID3=request.getParameter("D");
+    	System.out.println(ID2);
+    	
+    	type3=request.getParameter("E");
+    	System.out.println(type3);
     	
          try {
         	//URL of Oracle database server
@@ -93,19 +105,23 @@ public class GradebookOutput extends HttpServlet {
              }
              else if(custID.equalsIgnoreCase("b"))
              {
+            	 System.out.println("select assigment from Gradebook where type = '"+ type + "'");
             	 ResultSet rs = stmt.executeQuery("select assigment from Gradebook where type = '"+ type + "'"); 
-            	 output+="<table border=2 color=white bgcolor=black>";
+            	 output+="<table border=2 color=white bgcolor=white>";
             	 output+="<tr><th>Assignments</th></tr> ";
             	 while(rs.next())
             	 {
-            		 assignment= rs.getString("type");
+            		 assignment= rs.getString("assigment");
             		 output+= "<tr><td>" + assignment +"</td></tr>"; 
             	 }
              }
              else if(custID.equalsIgnoreCase("c"))
              {
-            	 ResultSet rs = stmt.executeQuery("select assigment from Gradebook where type = "+ type + "and StudentID = '" + ID + "'"); 
-            	 output+="<table border=2 color=white bgcolor=black>";
+            	 System.out.println(type);
+            	 System.out.println(ID);
+            	 System.out.println("select assigment from Gradebook where type = '"+ type2 + "'and StudentID = '" + ID2 + "'");
+            	 ResultSet rs = stmt.executeQuery("select assigment from Gradebook where type = '"+ type2 + "'and StudentID = '" + ID2 + "'"); 
+            	 output+="<table border=2 color=white bgcolor=white>";
             	 output+="<tr><th>Assignment</th></tr> ";
             	 while(rs.next())
             	 {
@@ -115,7 +131,8 @@ public class GradebookOutput extends HttpServlet {
              }
              else if(custID.equalsIgnoreCase("d"))
              {
-            	 ResultSet rs = stmt.executeQuery("select grade from Gradebook where StudentID =" + ID); 
+            	 System.out.println(ID3);
+            	 ResultSet rs = stmt.executeQuery("select grade from Gradebook where StudentID = '"+ ID3 + "'" ); 
             	 while(rs.next())
                 	 {
                 		 grade= rs.getString("Grade");
@@ -123,18 +140,31 @@ public class GradebookOutput extends HttpServlet {
                 		 average+=grade2;
                 		 count++;
                 	 }
-            	 aveT+="<p></p><table alight=center border=1 color=white bgcolor=white>";
-            	 aveT+="<tr><th>Average</th></tr> ";
+            	 System.out.println(average);
+            	 output+="<p></p><table alight=center border=1 color=white bgcolor=white>";
+            	 output+="<tr><th>Average</th></tr> ";
             	 average2=average/count;
-            	 aveT+= "<tr><td>" + String.valueOf(average2) +"</td></tr>";
+            	 output+= "<tr><td>" + String.valueOf(average2) +"</td></tr>";
              }
              else if(custID.equalsIgnoreCase("e"))
              {
-            	 //do max and min
+            	 System.out.println("select max (Grade), min(Grade) from gradebook where type='" + type3+ "'");
+            	 ResultSet rs = stmt.executeQuery("select max (Grade), min(Grade) from gradebook where type='" + type3+ "'"); 
+            	 output+="<table border=2 color=white bgcolor=white>";
+            	 output+="<tr><th>Max Grade</th><th>Min Grade</th></tr> ";
+            	
+            	 while(rs.next())
+                	 {
+            		 	assignment= rs.getString("Max(Grade)");
+            		 	assignment2= rs.getString("Min(Grade)");
+            		 	output+= "<tr><td>" + assignment +"</td><td>" + assignment2+ "</td></tr>"; 
+                	 }
+      
              }
              else
              {
-            	 //done
+            	 output+="<table border=2 color=white bgcolor=white>";
+            	 output+="<tr>Thanks for using the gradebook!</tr> ";
              }
        
                conn.close();

@@ -26,14 +26,14 @@ B) All assignment of a particular type by student <br>
 <input type="text" placeholder="assignment type" name="B"><br>
 <p></p>
 C) all assignments for particular type for a particular student<br>
-<input type="text" placeholder="assignment type" name="B" >
-<input type="text" placeholder="student ID" name="A"></input><br>
+<input type="text" placeholder="assignment type" name="C2" >
+<input type="text" placeholder="student ID" name="C"></input><br>
 <p></p>
 D) average for student<br>
-<input type="text" placeholder="student ID" name="A"><br>
+<input type="text" placeholder="student ID" name="D"><br>
 <p></p>
 E) highest and lowest grade for assignment<br>
-<input type="text" placeholder="assignment type" name="B"><br>
+<input type="text" placeholder="assignment type" name="E"><br>
 <p></p>
 F) done </p><br>
 <input href="GradebookOutput" type=submit name=display value="A"> </input>
