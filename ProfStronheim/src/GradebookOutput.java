@@ -47,8 +47,9 @@ public class GradebookOutput extends HttpServlet {
     }
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String ID, ID2, ID3,assignmentName, type, type2,type3, day, tempStr;
+		String ID, ID2, ID3, ID4, assignmentName, type, type2,type3, day, tempStr, className;
     	String grade = "";
+    	double test=0, project=0, homework=0, quiz=0, Ftest=0, Fproject=0,Fhomework=0, Fquiz=0, GPA=0, count1=0, count2=0, count3=0, count4=0;
     	
     	ID= request.getParameter("A");
     	System.out.println(ID);
@@ -67,6 +68,12 @@ public class GradebookOutput extends HttpServlet {
     	
     	type3=request.getParameter("E");
     	System.out.println(type3);
+    	
+    	ID4= request.getParameter("F");
+    	System.out.println(ID4);
+    	
+    	className= request.getParameter("F2");
+    	System.out.println(className);
     	
          try {
         	//URL of Oracle database server
@@ -90,7 +97,7 @@ public class GradebookOutput extends HttpServlet {
              Statement stmt = conn.createStatement();
              
              custID= request.getParameter("display");
-             System.out.println(custID);
+             
              if(custID.equalsIgnoreCase("A"))
              {
             	 ResultSet rs = stmt.executeQuery("select Assigment from Gradebook where StudentID = '"+ ID + "'" ); 
@@ -105,8 +112,8 @@ public class GradebookOutput extends HttpServlet {
              }
              else if(custID.equalsIgnoreCase("b"))
              {
-            	 System.out.println("select assigment from Gradebook where type = '"+ type + "'");
-            	 ResultSet rs = stmt.executeQuery("select assigment from Gradebook where type = '"+ type + "'"); 
+            	 System.out.println("select assigment from Gradebook where kind = '"+ type + "'");
+            	 ResultSet rs = stmt.executeQuery("select assigment from Gradebook where kind = '"+ type + "'"); 
             	 output+="<table border=2 color=white bgcolor=white>";
             	 output+="<tr><th>Assignments</th></tr> ";
             	 while(rs.next())
@@ -119,8 +126,8 @@ public class GradebookOutput extends HttpServlet {
              {
             	 System.out.println(type);
             	 System.out.println(ID);
-            	 System.out.println("select assigment from Gradebook where type = '"+ type2 + "'and StudentID = '" + ID2 + "'");
-            	 ResultSet rs = stmt.executeQuery("select assigment from Gradebook where type = '"+ type2 + "'and StudentID = '" + ID2 + "'"); 
+            	 System.out.println("select assigment from Gradebook where kind = '"+ type2 + "'and StudentID = '" + ID2 + "'");
+            	 ResultSet rs = stmt.executeQuery("select assigment from Gradebook where kind = '"+ type2 + "'and StudentID = '" + ID2 + "'"); 
             	 output+="<table border=2 color=white bgcolor=white>";
             	 output+="<tr><th>Assignment</th></tr> ";
             	 while(rs.next())
@@ -148,8 +155,7 @@ public class GradebookOutput extends HttpServlet {
              }
              else if(custID.equalsIgnoreCase("e"))
              {
-            	 System.out.println("select max (Grade), min(Grade) from gradebook where type='" + type3+ "'");
-            	 ResultSet rs = stmt.executeQuery("select max (Grade), min(Grade) from gradebook where type='" + type3+ "'"); 
+            	 ResultSet rs = stmt.executeQuery("select max (Grade), min(Grade) from gradebook where kind='" + type3+ "'"); 
             	 output+="<table border=2 color=white bgcolor=white>";
             	 output+="<tr><th>Max Grade</th><th>Min Grade</th></tr> ";
             	
@@ -161,10 +167,85 @@ public class GradebookOutput extends HttpServlet {
                 	 }
       
              }
+             else if(custID.equalsIgnoreCase("f"))
+             {
+            	 System.out.println("select * from Gradebook where StudentID='" + ID4+ "'and ClassName = '"+ className + "'");
+            	 ResultSet rs = stmt.executeQuery("select * from Gradebook where StudentID='" + ID4+ "'and ClassName = '"+ className + "'"); 
+            	 output+="<table border=2 color=white bgcolor=white>";
+            	 output+="<tr><th>Class Average</th></tr> ";
+            	 
+            	 while(rs.next())
+            	 {	
+            		 if(rs.getString("kind").equalsIgnoreCase("test"))
+            		 {
+            			 test+= Double.parseDouble(rs.getString("Grade"));
+            			 count1+=100;
+            			 
+            		 }
+            		 else if(rs.getString("kind").equalsIgnoreCase("project"))
+            		 {
+            			 project+= Double.parseDouble(rs.getString("Grade"));
+            			 count2+=100;
+            		 }
+            		 else if(rs.getString("kind").equalsIgnoreCase("homework"))
+            		 {
+            			 homework+= Double.parseDouble(rs.getString("Grade"));
+            			 count3+=100;
+            		 }
+            		 else if(rs.getString("kind").equalsIgnoreCase("quiz"))
+            		 {
+            			quiz+= Double.parseDouble(rs.getString("Grade"));
+            			count4+=100;
+            			 
+            		 }
+            	 }
+            	 System.out.println(test + " " + project + " " + homework + " " + quiz);
+            	 
+            	 rs= stmt.executeQuery("select * from weights");
+            	 rs.next();
+            	 if(count1==0)
+            	 {
+            		 Ftest=0;
+            	 }
+            	 else
+            	 {
+            		 Ftest=(rs.getDouble("Tests")/100) * (test/count1);
+            	 }
+            	 if(count4==0)
+            	 {
+            		 Fquiz=0;
+            	 }
+            	 else
+            	 {
+            	 Fquiz=(rs.getDouble("Quizzes")/100)*(quiz/count4);
+            	 }
+            	 
+            	 if(count3==0)
+            	 {
+            		 Fquiz=0;
+            	 }
+            	 else
+            	 {
+            		 Fhomework=(rs.getDouble("Homeworks")/100) * (homework/count3);
+            	 }
+            	 if(count2==0)
+            	 {
+            		 Fhomework=0;
+            	 }
+            	 else
+            	 {
+            	 Fproject=(rs.getDouble("Projects")/100)*(project/count2);
+            	 }
+            	 
+            	 //System.out.println(Ftest + " " + Fproject + " " + Fhomework + " " + Fquiz);
+            	 //System.out.println(rs.getDouble("Tests")/100);
+            	 GPA= (int)((Ftest + Fquiz + Fproject + Fhomework)*100);
+            	 //System.out.println(GPA);
+            	 output+="<tr><td>" + GPA +"</td></tr>";
+             }
              else
              {
-            	 output+="<table border=2 color=white bgcolor=white>";
-            	 output+="<tr>Thanks for using the gradebook!</tr> ";
+            	 
              }
        
                conn.close();

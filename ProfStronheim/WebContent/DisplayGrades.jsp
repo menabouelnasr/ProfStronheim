@@ -15,38 +15,33 @@
   <style> 
   body {text: white; background-color: white;  text-align: center; }
    p {background-color: white;}
-   h2{text:white;}
+   h1{text:white; text-aligh-left;}
    </style>
 </head>
 <body>
 <nav class="navbar navbar-inverse">
 <div class="jumbotron"> 
-<div class="container">
   <h1>Professor Strongheim's Gradebook</h1>
 </div>
-</div>
+<form action="AssignmentWeights.jsp" method="post">
+<input href="Weights" align= left type=submit name=submit value="Edit Assignment Weights"> </input>
+</form>
 </nav>
-<nav>
-
-</nav>
-
-
 
 <form action="Gradebook" method="post">
-<br></br>
-<p>Please enter the student ID number or assignment type that you are inquiring about <br></br><p>
-<br>
-Student ID:<br>
+Please enter the student ID number or assignment type that you are inquiring about <br></br>
+Student ID and Class Name:<br>
 <input type="text" name="StudentID"><br>
+<input type="text" name="ClassName"><br>
 <br>
 Assignment Name:<br>
 <input type="text" name="Assignment"><br>
 <br>
 Type:<br>
-<input type="text" name="type"><br>
+<input type="text" name="kind"><br>
 <br>
 Date (MM/DD/YYY):<br>
-<input type="text" name="day"><br>
+<input type="text" name="dates"><br>
 <br>
 Grade:<br>
 <input type="text" name="grade"><br>

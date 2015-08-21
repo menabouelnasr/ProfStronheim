@@ -20,8 +20,8 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class InputName
  */
-@WebServlet("/Gradebook")
-public class Gradebook extends HttpServlet 
+@WebServlet("/Weights")
+public class Weights extends HttpServlet 
 {
 	static Connection conn;
 	static String name, grade, output;
@@ -32,7 +32,7 @@ public class Gradebook extends HttpServlet
      * @see HttpServlet#HttpServlet()
      */
 
-    public Gradebook() 
+    public Weights() 
     {
         super();
         // TODO Auto-generated constructor stub
@@ -41,7 +41,7 @@ public class Gradebook extends HttpServlet
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-    private void addToDatabase ( String StudentID, String className,  String assignmentName, String type, String day, String grade ) {
+    private void addToDatabase ( double test, double project, double quiz, double homework ) {
          	//URL of Oracle database server
          	 
               String url = "jdbc:oracle:thin:testuser/password@localhost"; 
@@ -71,10 +71,22 @@ public class Gradebook extends HttpServlet
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		
+//			try
+//			{
+//				String insertQuery= "DELETE from Weights";
+//				System.out.println(insertQuery);
+//				stmt.executeUpdate(insertQuery);
+//			}
+//			catch ( SQLException ex ) 
+//			{
+//				ex.getMessage();
+//			}
+			
 			try 
-			{    
-				String insertQuery = "insert into Gradebook";
-				insertQuery += " values ( '" + StudentID + "', '"+ className + "', '" + assignmentName + "','"+ type + "','" +day + "','" + grade+ "')"; 
+			{   
+				String insertQuery = " insert into Weights";
+				insertQuery += " values ( " + test + ", "+ project + ", " + quiz + ","+ homework +  ")"; 
 				stmt.execute ( insertQuery );   
 				
 				System.out.println(insertQuery);
@@ -88,16 +100,14 @@ public class Gradebook extends HttpServlet
     }
     protected void processRequest( HttpServletRequest request, HttpServletResponse response )throws ServletException, IOException 
     {
-    	String ID, assignmentName, type, day, className, tempStr;
+    	Double test, project, quiz, homework;
 	
-    	ID= request.getParameter("StudentID");
-    	className=request.getParameter("ClassName");
-    	assignmentName = (String)request.getParameter( "Assignment" );
-    	type=request.getParameter("kind");
-    	day=request.getParameter("dates");
-    	tempStr = (String)request.getParameter( "grade" );
-    
-    	addToDatabase ( ID, className, assignmentName, type, day, tempStr );
+    	test= Double.parseDouble(request.getParameter("Test"));
+    	project = Double.parseDouble(request.getParameter( "Project" ));
+    	quiz=Double.parseDouble(request.getParameter("Quiz"));
+    	homework=Double.parseDouble(request.getParameter("Homework"));
+    	
+    	addToDatabase ( test, project, quiz, homework );
     }
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
@@ -112,7 +122,7 @@ public class Gradebook extends HttpServlet
 	{
 		// TODO Auto-generated method stub
 		processRequest(request, response);
-		getServletContext().getRequestDispatcher("/Output.jsp").forward(request,response);
+		getServletContext().getRequestDispatcher("/DisplayGrades.jsp").forward(request,response);
 		
 	}
 

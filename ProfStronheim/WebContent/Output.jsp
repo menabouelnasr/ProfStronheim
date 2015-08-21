@@ -35,7 +35,12 @@ D) average for student<br>
 E) highest and lowest grade for assignment<br>
 <input type="text" placeholder="assignment type" name="E"><br>
 <p></p>
-F) done </p><br>
+F) Student Class Average 
+<br></br>
+<input type="text" placeholder="student ID" name="F"><br>
+<input type="text" placeholder="class name" name="F2"><br>
+</p><br>
+
 <input href="GradebookOutput" type=submit name=display value="A"> </input>
 <input href="GradebookOutput" type=submit name=display value="B"> </input>
 <input href="GradebookOutput" type=submit name=display value="C"> </input>
