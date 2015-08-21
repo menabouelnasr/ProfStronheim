@@ -71,9 +71,8 @@ public class Weights extends HttpServlet
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		
 //			try
-//			{
+//			{	
 //				String insertQuery= "DELETE from Weights";
 //				System.out.println(insertQuery);
 //				stmt.executeUpdate(insertQuery);
@@ -123,7 +122,12 @@ public class Weights extends HttpServlet
 		// TODO Auto-generated method stub
 		processRequest(request, response);
 		getServletContext().getRequestDispatcher("/DisplayGrades.jsp").forward(request,response);
-		
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

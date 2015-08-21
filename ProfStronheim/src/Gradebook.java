@@ -113,7 +113,12 @@ public class Gradebook extends HttpServlet
 		// TODO Auto-generated method stub
 		processRequest(request, response);
 		getServletContext().getRequestDispatcher("/Output.jsp").forward(request,response);
-		
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
